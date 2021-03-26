@@ -1,0 +1,53 @@
+;;; elisp-math.el --- An Elisp based DSL for simple math -*- lexical-binding: t; coding: utf-8 -*-
+
+;; Author: Mackenzie Bligh <mackenziebligh@gmail.com>
+
+;; Keywords: tools math
+;; Homepage:
+;; Version: 0.0.1
+
+;; elisp-math requires at least GNU Emacs 25.1 and fotingo 1.9.2
+
+;; elisp-math is free software; you can redistribute it and/or modify it
+;; under the terms of the gnu general public license as published by
+;; the free software foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; elisp-math is distributed in the hope that it will be useful, but without
+;; any warranty; without even the implied warranty of merchantability
+;; or fitness for a particular purpose. See the gnu general public
+;; license for more details.
+;;
+;; You should have received a copy of the gnu general public license
+;; along with elisp-math.  if not, see http://www.gnu.org/licenses.
+
+;;; Commentary:
+;; Inspired by
+;; https://github.com/divs1210/maya/blob/master/src/maya/core.clj
+
+;;; Code:
+(require 'dash)
+
+;; https://www.emacswiki.org/emacs/ThreadMacroFromClojure
+(defmacro -> (x form &rest more)
+  "Rip off of Clojure's threading operation. See https://github.com/sroccaserra/emacs/blob/master/tools.el"
+  (cond ((not (null more)) `(-> (-> ,x ,form) ,@more))
+        (t (if (sequencep form)
+               `(if (null ,x) nil
+                  (,(first form) ,x ,@(rest form)))
+             `(if (null ,x) nil
+                ,(list form x))))))
+
+(defmacro |-> (exp &rest f-x-pairs)
+  "Threading but for simple math"
+  (if (= 0 (% (length f-x-pairs) 2))
+      ;; TODO need to apply order of operations here
+      `(-> ,exp
+           ,@(seq-partition f-x-pairs 2))
+    (error "Needs an even number of args")))
+
+(defmacro |> (&rest exprs)
+  (let* (())))
+(cdr (member '= '(1 2 = three)))
+
+;;; elisp-math.el ends here

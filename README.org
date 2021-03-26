@@ -1,0 +1,19 @@
+#+TITLE: elisp-math.el
+#+STARTUP: overview
+[[http://spacemacs.org][file:https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
+
+* IN-PROGRESS Installation
+Step 1: add the following to your ~init.el~
+#+BEGIN_SRC elisp
+  (add-to-list 'load-path "~/{location}/elisp-math.el")
+#+END_SRC
+
+** MELPA
+Coming soon
+* TODO Usage
+* Project Management
+** DONE Implement simple left to right evaluation
+CLOSED: [2021-03-26 Fri 08:07]
+** TODO Implement BEDMAS evaluation
+** TODO Implement math with variable bindings
+** TODO Implement evaluation from org-babel blocks without wrapping in a macro call
