@@ -2,6 +2,60 @@
 #+STARTUP: overview
 [[http://spacemacs.org][file:https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
 
+Elisp-math is a simple Emacs Lisp based DSL for doing straightforward
+calculations in emacs. It was born out of a frustration, and lack of desire to
+learn ~calc~, as well as calc's unclear behaviour when used in combination with
+~org-babel~. This package aims to simplify making straightforward calculations
+on Emacs, and when using org-mode
+
+For example: when trying to calculate the approximate cost of renting a U-Haul
+to drive from Mountain View to San Francisco several times, I wrote this janky
+elisp.
+#+begin_src elisp :results table :results output replace :var miles-per-trip=90 cost-per-mile=0.79
+  (let* ((rental-fee 19.95)
+         (insurance 14)
+         (environmental-fee 1)
+         (van-cost-per-mile 0.79)
+         (truck-cost-per-mile 1.39)
+         (fixed-cost-per-trip (+ rental-fee insurance environmental-fee))
+         (van-mileage-cost-per-trip (* miles-per-trip van-cost-per-mile))
+         (truck-mileage-cost-per-trip (* miles-per-trip truck-cost-per-mile))
+         (van-volume (* 9.5 5.6 4.7))
+         (truck-volume (* 11.9 6.3 6.2))
+         (van-trips 2)
+         (truck-volume-vantage (- (/ (- truck-volume van-volume) truck-volume) 0.2))
+         (truck-trip-cost (* van-trips van-mileage-cost-per-trip))
+         (van-trip-cost (* (- van-trips 1) truck-mileage-cost-per-trip)))
+    (princ (format "Fixed cost                      $%f\n" fixed-cost-per-trip))
+    (princ (format "Van cost per trip               $%f\n" van-mileage-cost-per-trip))
+    (princ (format "Truck cost per trip             $%f\n" truck-mileage-cost-per-trip))
+    (princ (format "Truck volume advantage          %f\n" (/ (- truck-volume van-volume) truck-volume)))
+    (princ (format "All equal, a truck makes %f fewer trips\n" truck-volume-vantage))
+    (princ (format "Estimated van driving costs     %f\n" (+ truck-trip-cost fixed-cost-per-trip)))
+    (princ (format "Estimated truck driving costs   %f\n" (+ van-trip-cost fixed-cost-per-trip))))
+#+end_src
+
+While this is effective at making an estimate, it isn't very readable,
+especially when exporting to other formats, or sharing with non Emacs users. The
+following would be much more amenable:
+#+BEGIN_EXAMPLE elisp-math
+  rental-fee = 19.95
+  insurance = 14
+  environmental-fee = 1
+  van-cost-per-mile =  0.79
+  truck-cost-per-mile =  1.39
+  fixed-cost-per-trip = rental-fee insurance environmental-fee
+  van-mileage-cost-per-trip = miles-per-trip van-cost-per-mile
+  truck-mileage-cost-per-trip = miles-per-trip truck-cost-per-mile
+  van-volume = 9.5 5.6 4.7
+  truck-volume = 11.9 6.3 6.2
+  van-trips = 2
+  truck-volume-vantage = (truck-volume - van-volume) / truck-volume
+  truck-trip-cost = * van-trips van-mileage-cost-per-trip
+  van-trip-cost = (van-trips - 1) truck-mileage-cost-per-trip
+#+END_EXAMPLE
+
+
 * IN-PROGRESS Installation
 Step 1: add the following to your ~init.el~
 #+BEGIN_SRC elisp
