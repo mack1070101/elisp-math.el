@@ -68,6 +68,8 @@ Coming soon
 * Project Management
 ** DONE Implement simple left to right evaluation
 CLOSED: [2021-03-26 Fri 08:07]
+** IN-PROGRESS Fix but with comma splitting
+- Comes down to that commas don't behave the same
 ** TODO Implement BEDMAS evaluation
 ** TODO Implement math with variable bindings
 ** TODO Implement evaluation from org-babel blocks without wrapping in a macro call

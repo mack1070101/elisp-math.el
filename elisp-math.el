@@ -40,14 +40,41 @@
 
 (defmacro |-> (exp &rest f-x-pairs)
   "Threading but for simple math"
+  (princ "\n")
+  (princ exp)
+  (princ "\n")
+  (princ f-x-pairs)
+  (princ "\n")
   (if (= 0 (% (length f-x-pairs) 2))
       ;; TODO need to apply order of operations here
       `(-> ,exp
            ,@(seq-partition f-x-pairs 2))
     (error "Needs an even number of args")))
 
+
 (defmacro |> (&rest exprs)
-  (let* (())))
-(cdr (member '= '(1 2 = three)))
+  (message "Exprs: %s" exprs)
+  (message "Type of %s" (type-of (car exprs)))
+  (while exprs
+    (progn
+      (-let [(exp rest) (--split-with (not (eq :as it)) (car exprs))]
+        (setq exprs (cdr exprs))
+        (message "Exp %s" exp)
+        (message "rest %s" rest)
+        (-let [(ignored var-name next-exprs) rest]
+          (message "Next exprs %s" next-exprs)
+          (if (not next-exprs)
+              (cons `|-> exp)
+            `(let* ((,var-name (|-> ,@exp)))
+               (|> ,@next-exprs))))))))
+
+
+;; TODO it's because it's quoted
+(|> '(4 + 0 :as four) '(2 + 3 :as five))
+
+(--split-with (not (eq :as it)) (nth 0 '((4 + 0 :as four) '(2 + 3 :as five))))
+(--split-with (not (eq :as it)) '(4 + 0 :as four))
+
+(type-of '(4 + 0 :as four))
 
 ;;; elisp-math.el ends here
