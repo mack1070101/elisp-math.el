@@ -40,11 +40,6 @@
 
 (defmacro |-> (exp &rest f-x-pairs)
   "Threading but for simple math"
-  (princ "\n")
-  (princ exp)
-  (princ "\n")
-  (princ f-x-pairs)
-  (princ "\n")
   (if (= 0 (% (length f-x-pairs) 2))
       ;; TODO need to apply order of operations here
       `(-> ,exp
@@ -67,14 +62,4 @@
               (cons `|-> exp)
             `(let* ((,var-name (|-> ,@exp)))
                (|> ,@next-exprs))))))))
-
-
-;; TODO it's because it's quoted
-(|> '(4 + 0 :as four) '(2 + 3 :as five))
-
-(--split-with (not (eq :as it)) (nth 0 '((4 + 0 :as four) '(2 + 3 :as five))))
-(--split-with (not (eq :as it)) '(4 + 0 :as four))
-
-(type-of '(4 + 0 :as four))
-
 ;;; elisp-math.el ends here
