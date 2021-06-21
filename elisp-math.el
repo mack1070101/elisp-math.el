@@ -42,10 +42,10 @@
   "Threading but for simple math"
   (if (= 0 (% (length f-x-pairs) 2))
       ;; TODO need to apply order of operations here
-      `(-> ,exp
-           ,@(seq-partition f-x-pairs 2))
-    (error "Needs an even number of args")))
-
+      ;; Forcing one arg to a float makes division behave as expected
+      `(-> (float ,exp
+                 ,@(seq-partition f-x-pairs 2))
+          (error "Needs an even number of args"))))
 
 (defmacro |> (&rest exprs)
   (message "Exprs: %s" exprs)
